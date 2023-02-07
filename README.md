@@ -1,8 +1,8 @@
 - 👋 Hi, I’m @destinyamba
 - 👀 I’m interested in Software Engineering 
-- 🌱 I’m currently learning Java
-- 💞️ I’m looking to collaborate on Java and Spring projects
-- 📫 How to reach me ... email ambakederemo-d@ulster.ac.uk
+- 🌱 I’m currently learning php
+- 💞️ I’m looking to collaborate on Laravel projects
+- 📫 How to reach me ... email destiny.amba@gmail.com
 
 <!---
 destinyamba/destinyamba is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
