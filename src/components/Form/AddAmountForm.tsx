@@ -18,7 +18,8 @@ const AddAmountForm = () => {
   const [amount, setAmount] = useState<number>();
   function addNewTransaction(ev: any) {
     ev.preventDefault();
-    const url = "http://localhost:4040/api/expenses";
+    const url = import.meta.env.VITE_REACT_APP_REACT_API_URL + "transaction";
+
     fetch(url, {
       method: "POST",
       headers: {
@@ -31,7 +32,7 @@ const AddAmountForm = () => {
       }),
     }).then((response) => {
       response.json().then((json) => {
-        console.log("resutl", json);
+        console.log("result", json);
       });
     });
   }
@@ -47,6 +48,7 @@ const AddAmountForm = () => {
             labelId="category"
             id="category"
             fullWidth
+            required
           >
             <MenuItem value="expense">Expense</MenuItem>
             <MenuItem value="income">Income</MenuItem>
@@ -59,13 +61,14 @@ const AddAmountForm = () => {
             id="description"
             label="Description"
             fullWidth
+            required
           />
         </FormControl>
 
         <FormControl>
           <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
           <OutlinedInput
-            value={amount}
+            value={amount || ""}
             onChange={(event) => setAmount(Number(event.target.value))}
             id="amount"
             startAdornment={
@@ -74,6 +77,7 @@ const AddAmountForm = () => {
             label="Amount"
             type="number"
             fullWidth
+            required
           />
         </FormControl>
         <Button variant="contained" type="submit" startIcon={<Plus />}>

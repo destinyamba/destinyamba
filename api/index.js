@@ -1,42 +1,56 @@
 import express from "express";
 import cors from "cors";
+import mongoose from "mongoose";
+import { Transaction } from "./models/transactions.js";
+import dotenv from "dotenv";
+
+dotenv.config({ path: ".env.local" });
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.get("/api/test", (req, res) => {
-  res.json("ok response");
+app.get("/api/transactions", async (req, res) => {
+  try {
+    await mongoose.connect(process.env.MONGO_URL);
+
+    const transactions = await Transaction.find();
+
+    res.json(transactions);
+  } catch (error) {
+    console.error("Error creating transaction:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
-app.post("/api/expenses", (req, res) => {
-  res.json(req.body);
-});
+app.post("/api/transaction", async (req, res) => {
+  const { category, description, amount } = req.body;
 
-app.put("/api/expenses/:id", (req, res) => {
-  // Extract the expense ID from the request parameters
-  const { id } = req.params;
+  try {
+    // Connect to the MongoDB database
+    await mongoose.connect(process.env.MONGO_URL);
 
-  // Extract the updated expense data from the request body
-  const { amount, description, category } = req.body;
+    // Add a submittedAt date to the transaction
+    const submittedAt = new Date();
 
-  // Retrieve the existing expense from a database or other data source
-  const existingExpense = getExpenseById(id);
+    // Create the transaction object
+    const transaction = {
+      category,
+      description,
+      amount,
+      submittedAt,
+    };
 
-  // Update the existing expense with the new data
-  const updatedExpense = {
-    ...existingExpense,
-    amount,
-    description,
-    category,
-    updatedAt: new Date(),
-  };
+    // Create the transaction in the database
+    const transactionResponse = await Transaction.create(transaction);
 
-  // Save the updated expense to the database or other data source
-  saveExpense(updatedExpense);
-
-  // Send a response to the client
-  res.json(updatedExpense);
+    // Send the response with the created transaction
+    res.json(transactionResponse);
+  } catch (error) {
+    // Handle errors
+    console.error("Error creating transaction:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.listen(4040);
